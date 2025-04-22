@@ -1,52 +1,118 @@
 ---
-title: 'REST API - Introdution'
+title: 'REST API - Introduction'
 date: '2025-4-22'
 tags: ['backend', 'rest', 'api', 'system-design']
 draft: false
 layout: PostBanner
-images: ['/static/images/rest-api/rest-api-banner.png']
-summary: REST API - The backbone of modern web applications
+images: ['/static/images/rest-api/banner.png']
+summary: A comprehensive guide explaining REST API fundamentals, principles, types, and design challenges for developers.
 ---
 
-# Introdution
+## Table of Contents
 
-REST stands for **Representational State Transfer** which is type of API that allows communication between systems over the internet.
-REST API uses **HTTP** methods like **GET , PUT , POST , DELETE** to define actions that can be performed on resources.
+1. [Introduction](#introduction)
+2. [API Fundamentals](#api-fundamentals)
+   - [Examples of APIs](#examples-of-apis)
+3. [API Classifications](#api-classifications)
+   - [Access Level](#access-level)
+   - [Communication Methods](#communication-methods)
+   - [Data Format](#data-format)
+   - [Processing Approach](#processing-approach)
+   - [Authentication Methods](#authentication-methods)
+4. [REST Principles](#rest-principles)
+   - [Client-Server Architecture](#client-server-architecture)
+   - [Statelessness](#statelessness)
+   - [Uniform Interface](#uniform-interface)
+   - [Cacheability](#cacheability)
+   - [Layered System](#layered-system)
+   - [Code on Demand (Optional)](#code-on-demand-optional)
+5. [Challenges](#challenges)
+6. [References](#references)
 
-# Client-Server Architecture
+## Introduction
 
-A client is any system that sends requests to the server. The server is responsible for processing the request from the client.
-Let us consider as an example , the client (Browser) asks for the list of users to the server. The server process the client response.
-It will check the database about the users and sends responses to the client. The Server can act as a client too. For example, if the database is
-hosted in another server, the server now acts as client and request for the resource.
+REST (Representational State Transfer) is a architectural style for designing networked applications that leverages the HTTP protocol for communication between systems over the internet. REST APIs utilize standard HTTP methods like GET, PUT, POST, and DELETE to perform operations on resources, making them intuitive and widely compatible.
 
-# API
+## API Fundamentals
 
-API stands for **Application Programming Interface** is a set of rules and tools that allow different software applications to communicate and exchange between them. It defines the structure of the responses.
-API acts as a middleman that enables applications to interact without the need of direct access.
-REST API are widely used in communication.
+An Application Programming Interface (API) serves as a mediator between different software applications, enabling them to communicate and exchange data without direct access to each other's internals. APIs define the structure of requests and responses, creating standardized methods of interaction.
 
-![API](https://voyager.postman.com/illustration/diagram-what-is-an-api-postman-illustration.svg)
+### Examples of APIs
 
-## Examples
+- Weather APIs
+- Uber driver APIs
+- DOM (Document Object Model) APIs
 
-- Weather API
-- Currency Converter API
+## API Classifications
 
-## Types of API
+### Access Level
 
-- Public APIs
-- Private APIs
-- Programming APIs
+- **Public APIs**: Open for any developer to use
+- **Private APIs**: Restricted to internal use within organizations
 
-## Communication methods
+### Communication Methods
 
-- REST
-- SOAP
-- GraphQL
-- gRPC
+- **REST**: Resource-based approach using HTTP methods
+- **SOAP**: Protocol using XML for structured message exchange
+- **GraphQL**: Query language allowing clients to request specific data
+- **gRPC**: High-performance RPC framework using protocol buffers
 
-# References
+### Data Format
+
+- **JSON**: Lightweight, human-readable format
+- **XML**: More verbose but highly structured
+- **Plain text**: Simple string responses
+
+### Processing Approach
+
+- **Real-time**: Immediate processing and response
+- **Batch Processing**: Handling multiple requests together
+
+### Authentication Methods
+
+- **API Keys**: Simple token-based access
+- **OAuth**: Token-based authorization framework
+- **JWT**: Self-contained tokens with encoded claims
+
+## REST Principles
+
+### Client-Server Architecture
+
+A separation of concerns where clients send requests to servers that process them and return appropriate responses. This separation allows each component to evolve independently.
+
+### Statelessness
+
+Each request from client to server must contain all information needed to understand and process the request. The server doesn't store client session information between requests, simplifying server implementation and improving scalability.
+
+### Uniform Interface
+
+Standardized methods of interaction through:
+
+- Consistent resource identification via URLs
+- Standard HTTP methods (GET, POST, PUT, DELETE)
+- Self-descriptive messages
+- Hypermedia as the engine of application state (HATEOAS)
+
+### Cacheability
+
+Responses must define themselves as cacheable or non-cacheable to prevent clients from reusing stale data and improve performance by reducing redundant requests.
+
+### Layered System
+
+Architecture allowing intermediaries (proxies, gateways, load balancers) between client and server without affecting the interface or functionality.
+
+### Code on Demand (Optional)
+
+Servers can temporarily extend client functionality by transferring executable code.
+
+## Challenges
+
+- **Error Handling**
+- **Versioning**
+- **Pagination**
+- **Security**
+
+## References
 
 1. [Master REST APIs: The Backbone of Modern Web Applications](https://youtu.be/HV5u-HjEFvY?si=7Sa2c2ymjAE3gryc)
 2. [Algomaster](https://blog.algomaster.io/p/master-the-art-of-rest-api-design)

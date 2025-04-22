@@ -24,7 +24,7 @@ const siteMetadata = {
   // bluesky: 'https://bsky.app/',
   locale: 'en-US',
   // set to true if you want a navbar fixed to the top
-  stickyNav: true,
+  stickyNav: false,
   analytics: {
     // googleAnalytics: {
     //   googleAnalyticsId: '', // e.g. G-XXXXXXX
@@ -66,7 +66,7 @@ const siteMetadata = {
     },
   },
   search: {
-    provider: 'kbar', 
+    provider: 'kbar',
     kbarConfig: {
       searchDocumentsPath: `${process.env.BASE_PATH || ''}/search.json`,
     },
