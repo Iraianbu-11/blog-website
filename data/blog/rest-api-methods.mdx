@@ -1,0 +1,235 @@
+---
+title: 'REST API - Methods'
+date: '2025-4-23'
+tags: ['backend', 'rest', 'api', 'system-design']
+draft: false
+summary: An overview of HTTP methods used in REST APIs including GET, POST, PUT, PATCH, DELETE, OPTIONS, and HEAD.
+---
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [HTTP Methods](#http-methods)
+  - [GET](#get)
+  - [POST](#post)
+  - [PUT](#put)
+  - [PATCH](#patch)
+  - [DELETE](#delete)
+  - [OPTIONS](#options)
+  - [HEAD](#head)
+  - [TRACE](#trace)
+  - [CONNECT](#connect)
+- [Reference](#reference)
+
+# Introduction
+
+**Hypertext Transfer Protocol (HTTP)** is an application layer protocol used for communication between web browsers and web servers.
+REST use standard HTTP methods to perform different operations on resources.
+Resource represent a specific piece of data or object that can be accessed via a unique URI (Uniform Resource Identifier).
+
+> [!NOTE]
+> URI (Uniform Resource Identifier) is a general term for identifying a resource, while a URL (Uniform Resource Locator) is a specific type of URI that also provides the location of the resource.
+
+![HTTP Methods](/static/images/rest-api-methods/image.png)
+
+# HTTP Methods
+
+## GET
+
+### Purpose : Retrieve data from the server
+
+### Characteristics :
+
+- Read-only operation
+- Idempotent (Multiple requests have same effect as a single request)
+
+```http
+GET /api/v1/posts HTTP/1.1
+Host : posts.com
+```
+
+### Best Practices :
+
+- Use clear,hiearchical endpoints. For example :
+  /users/:id to get details for specific user or /users to get details for all users.
+- Do not include any sensitive information in the URL.
+- Always return the right status codes :
+  200 (OK)
+  404 (Not found)
+
+## POST
+
+### Purpose : Create a new resource on the server
+
+### Characteristics :
+
+- Sends data in the request body
+- Cannot be cacheable unless specified
+- Not Idempotent
+
+```http
+POST /api/v1/posts HTTP/1.1
+Host : posts.com
+Content-Type : application/JSON
+
+{
+    "title" : "Introduction to REST API",
+    "author" : "Iraianbu A"
+}
+```
+
+### Best Practices :
+
+- Validate the payloads before processing.
+- Always return the right status codes :
+  201 (Created)
+  400 (Bad request)
+
+## PUT
+
+### Purpose: Update an existing resource or create it if it doesn't exist
+
+### Characteristics:
+
+- Idempotent
+- Replaces the entire resource
+- Requires the complete resource representation
+
+```http
+PUT /api/posts/1 HTTP/1.1
+Host: posts.com
+Content-Type: application/json
+
+{
+  "title": "REST API - Methods",
+  "author": "Iraianbu A",
+}
+```
+
+### Best Practices :
+
+- Make sure the request includes all the required fields.
+- Don't use PUT for partial updates. Use PATCH instead.
+- Always return the right status codes :
+  200 (OK)
+  404 (Not found)
+  400 (Bad request)
+
+## PATCH
+
+### Purpose: Partially update an existing resource
+
+### Characteristics:
+
+- Modifies only specified fields
+- Not necessarily idempotent
+- More efficient than PUT when updating partial resources
+
+### Best Practices :
+
+- Ensure partial updates don't create inconsistencies (E.g) Updating the price should also update the tax amount.
+- Always return the right status codes :
+  200 (OK)
+  204 (No content)
+  404 (Not found)
+  400 (Bad request)
+
+```http
+PATCH /api/posts/1 HTTP/1.1
+Host: posts.com
+Content-Type: application/json
+
+{
+  "title": "REST API - HTTP Methods",
+}
+```
+
+## DELETE
+
+### Purpose: Remove a resource from the server
+
+### Characteristics:
+
+- Idempotent
+- May return different status codes on subsequent calls
+
+```http
+DELETE /api/posts/1 HTTP/1.1
+Host: posts.com
+```
+
+### Best Practices :
+
+- Should always consider using soft deletes instead of hard deletes (E.g) Instead of deleting a user from the database, we can just mark it with deleted_at timestamp.
+- Always return the right status codes :
+  200 (OK)
+  404 (Not found)
+
+## OPTIONS
+
+### Purpose: Get information about available communication options for a resource
+
+### Characteristics:
+
+- Often used for CORS (Cross-Origin Resource Sharing) preflight requests
+- Returns available methods and other capabilities
+
+```http
+OPTIONS /api/posts/1 HTTP/1.1
+Host: posts.com
+```
+
+## HEAD
+
+### Purpose: Get metadata about a resource without the body
+
+### Characteristics:
+
+- Similar to GET but without the response body
+- Useful for checking resource availability and headers
+
+```http
+HEAD /api/posts/1 HTTP/1.1
+Host: posts.com
+```
+
+## TRACE
+
+### Purpose: Get the route and status of a resource
+
+### Characteristics:
+
+- Returns the request route and status
+- Useful for debugging and diagnosing issues
+
+```http
+TRACE /api/posts/1 HTTP/1.1
+Host: posts.com
+```
+
+## CONNECT
+
+### Purpose: Establish a tunnel to the server
+
+### Characteristics:
+
+- Creates a secure tunnel for encrypted communication
+- Useful for proxying and tunneling
+
+```http
+CONNECT /api/posts/1 HTTP/1.1
+Host: posts.com
+```
+
+| Method | Idempotent | Safe | Cacheable |
+| ------ | ---------- | ---- | --------- |
+| GET    | Yes        | Yes  | Yes       |
+| POST   | No         | No   | No        |
+| PUT    | Yes        | No   | No        |
+| PATCH  | No         | No   | No        |
+| DELETE | Yes        | No   | No        |
+
+## Reference
+
+- [Bytemonk](https://youtu.be/KF-3jtGH6Yk?si=-0Yft54TSg8hfkmA)
+- [MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Methods)
