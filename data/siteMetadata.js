@@ -26,14 +26,14 @@ const siteMetadata = {
   // set to true if you want a navbar fixed to the top
   stickyNav: false,
   analytics: {
-    // googleAnalytics: {
+    // googleAnalytics: {p
     //   googleAnalyticsId: '', // e.g. G-XXXXXXX
     // },
   },
   newsletter: {
     // supports mailchimp, buttondown, convertkit, klaviyo, revue, emailoctopus, beehive
     // Please add your .env file and modify it according to your selection
-    provider: 'buttondown',
+    provider: 'convertkit',
   },
   comments: {
     // If you want to use an analytics provider you have to add it to the

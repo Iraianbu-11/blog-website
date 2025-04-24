@@ -1,0 +1,189 @@
+---
+title: 'REST API - HTTP Headers'
+date: '2025-4-24'
+tags: ['backend', 'rest', 'api', 'system-design', 'http']
+draft: false
+summary: Quick overview of HTTP headers in REST APIs with examples.
+---
+
+# Table of Contents
+
+- [Introduction](#introduction)
+- [HTTP Headers](#http-headers)
+- [Categories](#categories)
+  - [Request Headers](#request-headers)
+  - [Response Headers](#response-headers)
+  - [Entity Headers](#entity-headers)
+  - [General Headers](#general-headers)
+- [Common HTTP Headers](#common-http-headers)
+  - [Content-Type](#content-type)
+  - [Accept](#accept)
+  - [Authorization](#authorization)
+  - [Cache-Control](#cache-control)
+  - [Set-Cookie](#set-cookie)
+  - [CORS](#cors)
+- [References](#references)
+
+## Introduction
+
+HTTP headers carries metadata about the request or response. Headers provide critical information about the HTTP communication.
+Without them, web communication lack structure , security and efficiency.
+
+![HTTP Headers](/static/images/rest-api/http-header.png)
+
+## HTTP Headers
+
+It contains key-value pairs transmitted at the beginning of HTTP requests and responses.
+The header name is case-insensitive, though by convention they're often written in Pascal case (e.g., `Content-Type`).
+
+```
+Header-Name : Header-Value
+```
+
+To inspect the headers of a request, you can use the `curl` command.
+
+```
+curl -I https://www.google.com
+
+HTTP/1.1 301 Moved Permanently
+Location: https://www.google.com/
+Content-Type: text/html; charset=UTF-8
+Date: Thu, 24 Apr 2025 16:06:37 GMT
+Expires: Sat, 24 May 2025 16:06:37 GMT
+Cache-Control: public, max-age=2592000
+Server: gws
+Content-Length: 220
+X-XSS-Protection: 0
+X-Frame-Options: SAMEORIGIN
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+```
+
+## Categories
+
+### Request Headers
+
+It is sent by the client (browser) to the server, containing information about :
+
+- The client itself (User-Agent)
+- What type of responses it will accept (Accept, Accept-Language)
+- Authentication credentials (Authorization)
+- Caching preferences (Cache-Control)
+- Connection management (Connection)
+
+### Response Headers
+
+It is sent by the server to the client, containing information about :
+
+- The server itself (Server)
+- Details about the resource (Content-Type, Content-Length)
+- How long the content will stay fresh (Cache-Control)
+- Security policies (Content-Security-Policy)
+- Cookie settings (Set-Cookie)
+
+### Entity Headers
+
+It describes the content being transferred.
+
+- Content-Type
+- Content-Length
+- Content-Encoding
+- Content-Language
+- Content-Location
+
+### General Headers
+
+It is used for both requests and responses.
+
+- Date
+- Connection
+- Cache-Control
+- Transfer-Encoding
+
+## Common HTTP Headers
+
+### Content-Type
+
+It specfies the media type of the resource being sent.
+
+```
+Content-Type: text/html; charset=UTF-8
+Content-Type: application/json
+Content-Type: image/png
+```
+
+### Accept
+
+It specifies the media types that the client can accept.
+
+```
+Accept: text/html
+Accept: application/json
+```
+
+Client request with both header
+
+```
+POST /api/v1/users HTTP/1.1
+Host: example.com
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name": "Iraianbu A",
+    "email": "irainbu@gmail.com",
+}
+```
+
+Server response :
+
+```
+HTTP/1.1 201 Created
+Content-Type: application/json
+```
+
+### Authorization
+
+It provides credentials for accessing protected resources.
+
+```
+Authorization: Basic <credentials>
+Authorization: Bearer <token>
+```
+
+### Cache-Control
+
+It controls how caches should handle the response.
+
+```
+Cache-Control: no-store , max-age=0 // Do not cache
+Cache-Control: public, max-age=3600 // Cache for 1 hour
+Cache-Control: private, no-cache // Cache for a private user
+```
+
+### Set-Cookie
+
+It is used to set a cookie.
+
+```
+Set-Cookie: session=1234567890; HttpOnly; Secure; Max-Age=3600
+```
+
+> [!NOTE]
+> **HttpOnly**: Prevents client-side JavaScript from accessing the cookie. <br />
+> **Secure**: Ensures the cookie is only sent over HTTPS. <br />
+> **Max-Age**: Specifies the expiration time in seconds. <br />
+
+### CORS
+
+CORS (Cross-Origin Resource Sharing) ensures which domains can access the resource.
+
+```
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE
+Access-Control-Allow-Headers: Content-Type, Authorization
+```
+
+## References
+
+- [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers)
+- [ByteMonk](https://youtu.be/fFHl7psnvz0?si=iWBUbi0irdZWaRy4)
