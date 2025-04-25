@@ -1,0 +1,216 @@
+---
+title: 'REST API - Best Practices'
+date: '2025-4-25'
+tags: ['backend', 'rest', 'api', 'system-design', 'http']
+draft: false
+summary: Deep dive into REST API best practices with examples.
+---
+
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [Use HTTP Methods Correctly](#use-http-methods-correctly)
+3. [Use Nouns for Resources](#use-nouns-for-resources)
+4. [Use HTTP Status Codes Correctly](#use-http-status-codes-correctly)
+5. [Error Handling](#error-handling)
+6. [Versioning](#versioning)
+7. [Pagination , Filtering and Sorting](#pagination-filtering-and-sorting)
+   - [Pagination](#pagination)
+   - [Filtering](#filtering)
+   - [Sorting](#sorting)
+8. [HATEOAS](#hateoas)
+9. [Rate Limiting](#rate-limiting)
+   - [Common Rate Limiting Strategies](#common-rate-limiting-strategies)
+10. [Caching](#caching)
+11. [Conclusion](#conclusion)
+12. [References](#references)
+
+## Introduction
+
+This article explores the best practices for REST APIs.
+These practices provide a comprehensive guide to help you design and implement robust and scalable RESTful APIs.
+Checkout the previous article [REST API](./rest-api-introduction) to get the basics of REST APIs.
+
+![REST API Best Practices](/static/images/rest-api/rest-api-best-practices.png)
+Source : https://blog.postman.com/wp-content/uploads/2020/07/API-101-What-Is-a-REST-API-scaled.jpg
+
+## Use HTTP Methods Correctly
+
+The HTTP methods are already explained in the previous article. Please check this article to get better understanding of [HTTP Methods](./rest-api-methods).
+It's like the verbs of an API.
+
+- `GET` - Retrieve a resource <br />
+- `POST` - Create a resource <br />
+- `PUT` - Update a existing resource entirely <br />
+- `PATCH` - Update a resource partially <br />
+- `DELETE` - Delete a resource <br />
+
+## Use Nouns for Resources
+
+In REST API, URI are used to identify the resources. The key thing is to focus on things not actions.
+Instead of describing actions, describe what you want to do.
+
+- Avoid actions
+- Focus on resources
+- Hierarchical URIs for nested resources
+
+> The URL should represent what you are working with, The HTTP method represents what you are doing with it.
+
+```
+✅ Good: GET /api/v1/users
+❌ Bad: GET /api/v1/getUsers
+✅ Hierarchical-URI : GET /api/v1/users/123
+```
+
+## Use HTTP Status Codes Correctly
+
+HTTP status codes are used to indicate the status of the request.
+
+| Category | Range   | Meaning                 |
+| -------- | ------- | ----------------------- |
+| 1xx      | 100-199 | Informational responses |
+| 2xx      | 200-299 | Success responses       |
+| 3xx      | 300-399 | Redirection responses   |
+| 4xx      | 400-499 | Client-side errors      |
+| 5xx      | 500-599 | Server-side errors      |
+
+- 2xx (Success) : The request was successful
+- 3xx (Redirection) : The request was redirected
+- 4xx (Client-side errors) : The request was invalid
+  - 429 Too Many Requests : The request was rate limited
+- 5xx (Server-side errors) : The server-side error
+  - 503 Service Unavailable : The server is temporarily unavailable
+
+The below are the most commonly used status codes:
+
+- 200 OK : Success
+- 201 Created : Resource created
+- 204 No Content : Sucess , no content to return
+- 400 Bad Request : The request was invalid
+- 401 Unauthorized : The request was unauthorized [Authentication required]
+- 403 Forbidden : The request is forbidden [Authenticated user but doesn't have permission]
+- 404 Not Found : The resource was not found
+- 500 Internal Server Error - Server-side error
+
+## Error Handling
+
+The error handling helps to identify the issues in the request and to provide a better user experience.
+For each request, the error handling should be done in the following order:
+
+- Validate the request
+- Check if the resource exists
+- Check if the user has permission to access the resource
+- Return the appropriate error code
+
+## Versioning
+
+The versioning is used to manage the different versions of the API.
+
+There are 3 types of versioning:
+
+- URI Versioning
+
+```
+GET /api/v1/users
+GET /api/v2/users
+```
+
+- Header Versioning
+
+```
+GET /api/users
+Accept-Version: v1
+
+GET /api/users
+Accept-Version: v2
+```
+
+- Query Parameter Versioning
+
+```
+GET /api/users?version=v1
+GET /api/users?version=v2
+```
+
+## Pagination , Filtering and Sorting
+
+### Pagination
+
+Pagination breaks the large data into smaller chunks and returns the data in the chunks.
+
+```
+GET /api/users?page=1&limit=10
+```
+
+### Filtering
+
+Filtering is used to filter the data based on the query parameters.
+
+```
+GET /api/users?role=admin
+```
+
+### Sorting
+
+Sorting is used to sort the data based on the query parameters.
+
+```
+GET /api/users?sort=name&order=asc
+```
+
+## HATEOAS
+
+HATEOAS (Hypermedia as the Engine of Application State) is a principle that states that the API should be hypermedia-driven.
+It includes links in the response that guide the client to the next action. It makes the API more discoverable and easier to use.
+It allows the client to navigate the API without knowing the exact URL.
+
+```json
+{
+  "orderId": "1",
+  "status": "PENDING",
+  "total": 100,
+  "items": [{ "productId": "P-1", "quantity": 2, "price": 50 }],
+  "_links": {
+    "self": { "href": "/orders/1" },
+    "payment": { "href": "/orders/1/payment" },
+    "cancel": { "href": "/orders/1/cancel" },
+    "customer": { "href": "/customers/1" }
+  }
+}
+```
+
+## Rate Limiting
+
+Rate limiting is used to limit the number of requests that can be made to the API.
+This reduces the load on the server and improves the performance of the API.
+
+### Common Rate Limiting Strategies
+
+- Fixed Window Rate Limiting
+- Sliding Window Rate Limiting
+- Token Bucket Rate Limiting
+- Leaky Bucket Rate Limiting
+- Fixed Window Rate Limiting
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json
+X-Rate-Limit-Limit: 100 // Maximum requests allowed
+X-Rate-Limit-Remaining: 87 // Requests remaining
+X-Rate-Limit-Reset: 1605116036 // Time when the limit will be reset
+```
+
+## Caching
+
+Caching is used to cache the response of the API.
+This reduces the load on the server and improves the performance of the API.
+
+## Conclusion
+
+In this article, we have discussed the best practices for REST APIs.
+Make sure to subscribe to the newsletter to get the latest updates and new articles.
+
+## References
+
+- [Bytemonk](https://youtu.be/pJ83mmqcvoQ?si=k1QrcoTL4rz77-z8)
+- [MDN](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status)
