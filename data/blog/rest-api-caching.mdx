@@ -1,0 +1,168 @@
+---
+title: 'REST API - Caching'
+date: '2025-4-26'
+tags: ['backend', 'rest', 'api', 'system-design']
+draft: false
+summary: Explore REST API caching with examples.
+---
+
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [Application Layer Caching](#application-layer-caching)
+3. [Request Level Caching](#request-level-caching)
+4. [Conditional Caching](#conditional-caching)
+5. [Cache Invalidation](#cache-invalidation)
+   - [Write-Through Cache](#write-through-cache)
+   - [Write-Behind Cache](#write-behind-cache)
+   - [TTL-based Cache](#ttl-based-cache)
+6. [Layered Caching](#layered-caching)
+7. [References](#references)
+
+## Introduction
+
+Caching is a technique used to store frequently accessed data in a temporary storage location, such as memory or disk, to reduce the time it takes to retrieve that data from the original source.
+This improves the performance of the API and reduces the load on the server.
+![REST API Caching](/static/images/rest-api/rest-api-caching.png)
+
+Source : [Bytemonk](https://youtu.be/TV-xsNjbx_g?si=mzkEoczWK6Vsb73B)
+
+## Application Layer Caching
+
+Application layer caching is a technique used to cache the response of the API.
+This is done at the application level, which is the layer between the client and the server.
+In-memory caching is the most common application layer caching technique. Redis and Memcached are the most popular in-memory caching solutions.
+This reduces the load on the database and improves the performance of the API.
+
+## Request Level Caching
+
+Request level caching is a technique used to cache the response of the API at the request level.
+This is done at the application level, which is the layer between the client and the server.
+This is mostly for read-heavy operations.
+
+### Uniques cache key
+
+| Request | Request Parameters | Cache Key |
+| ------- | ------------------ | --------- |
+| GET     | /api/users/1       | user_1    |
+
+- Read-Heay APIs
+- Expensive Queries
+- Paginated Data
+
+## Conditional Caching
+
+It ensures that the client recieve updated data only if it necessary.
+It reduces bandwidth usage and improves performance.
+
+### ETag
+
+ETag is a unique identifier for a resource. It is a hash of the resource's content.
+It is used to check if the resource has been modified since the last request.
+
+First request:
+
+- Request:
+
+```
+GET /api/users/1
+```
+
+- Response:
+
+```
+200 OK
+Headers: ETag: "1234567890"
+Body: {
+    "name": "Iraianbu",
+    "email": "iraianbu011@gmail.com"
+}
+```
+
+Second request:
+
+- Request:
+
+```
+GET /api/users/1
+Header: If-None-Match: "1234567890"
+```
+
+- Response:
+  - If unchanged:
+
+```
+304 Not Modified
+```
+
+- If changed:
+
+```
+200 OK
+Headers: ETag: "1234567891"
+Body: {
+    "name": "Iraianbu",
+    "email": "iraianbu@gmail.com"
+}
+```
+
+### Last-Modified
+
+Last-Modified is a header that is used to check if the resource has been modified since the last request.
+It is used to check if the resource has been modified since the last request.
+
+## Cache Invalidation
+
+Cache invalidation is a technique used to invalidate the cache when the resource is modified.
+This is done at the application level, which is the layer between the client and the server.
+It is method to update or remove cached data when the underlying data changes.
+
+### Write-Through Cache
+
+Write-Through Cache is a technique used to write data to the cache and the database at the same time.
+
+Pros:
+
+- Cache is always up to date with the database.
+- Easy to implement.
+
+Cons:
+
+- Performance overhead because of the write to the database.
+
+### Write-Behind Cache
+
+Write-Behind Cache is a technique in which cache is updated asynchronously after the database is updated.
+
+Pros:
+
+- Faster write operations.
+- High write throughput.
+
+Cons:
+
+- Temporarily hold stale data.
+- More complex to implement.
+
+### TTL-based Cache
+
+TTL(Time To Live) - based Cache is a technique in which cache is expired after a certain time.
+
+| Strategy            | Best Use Case                                                         | Trade-offs                  |
+| ------------------- | --------------------------------------------------------------------- | --------------------------- |
+| Write-Through Cache | Read-Heavy Operations                                                 | Slower writes               |
+| Write-Behind Cache  | Write-Heavy Operations                                                | Temporarily hold stale data |
+| TTL-based Cache     | Data with predictable or time-based expiration (e.g., Session tokens) | Potential for stale data    |
+
+## Layered Caching
+
+Layered Caching is a technique in which cache is used at multiple layers.
+
+- Browser Cache (Store content close to the user)
+- CDN Cache (Store content close to the user geographically)
+- Application Layer Cache (Store content in the application)
+- Database Cache (Store content in the database)
+
+## References
+
+- [Bytemonk](https://youtu.be/TV-xsNjbx_g?si=mzkEoczWK6Vsb73B)
