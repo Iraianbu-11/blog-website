@@ -1,7 +1,8 @@
 {
-  "backend": 5,
+  "backend": 6,
+  "security": 1,
+  "api": 6,
   "rest": 5,
-  "api": 5,
   "system-design": 5,
   "http": 3
 }

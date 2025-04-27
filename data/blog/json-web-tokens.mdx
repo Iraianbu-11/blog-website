@@ -1,0 +1,48 @@
+---
+title: 'JSON Web Tokens (JWT)'
+date: '2025-4-27'
+tags: ['backend', 'security', 'api']
+draft: false
+summary: Deep dive into JSON Web Tokens with real world examples.
+---
+
+## Introduction
+
+JSON Web Tokens (JWT) is an open standard that specifies a compact and self-contained method for securely transmitting information between parties.
+JWTs are a type of token that can be utilized across multiple servers. They are akin to wristbands, allowing security personnel to easily identify individuals.
+JWTs are often used for API authentication, providing a single authorization that enables users to access the API multiple times.
+
+- Secure
+- Stateless
+- Compact
+- Flexible
+
+## Session tokens
+
+Session tokens are encrypted strings used to identify a session between two parties.
+Consider a scenario where a user logs into a website and needs to be identified.
+The user is given a session token, which is stored in the server's memory.
+This token allows the server to identify the user and retrieve their data from the database.
+The session token is stored in the client's browser cookies.
+
+## JWT vs Session tokens
+
+JWT and session tokens are both used to authenticate users, but they have some key differences.
+
+| JWT                                 | Session tokens                      |
+| ----------------------------------- | ----------------------------------- |
+| Can be used across multiple servers | Can only be used on a single server |
+| More secure                         | Less secure                         |
+| More flexible                       | Less flexible                       |
+
+## Structure
+
+A JWT is composed of three parts separated by dots:
+
+- Header (Algorithm and token type)
+- Payload (claims/data)
+- Signature (encoded header and payload)
+
+These parts are encoded in a format called Base64, which turns data into a string that’s easy to send over the internet.
+
+## How JWT Works
