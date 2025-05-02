@@ -1,10 +1,30 @@
 ---
 title: 'JSON Web Tokens (JWT)'
-date: '2025-4-27'
+date: '2025-05-02'
 tags: ['backend', 'security', 'api']
 draft: false
 summary: Deep dive into JSON Web Tokens with real world examples.
 ---
+
+## Table of Contents
+
+1. [Introduction](#introduction)
+2. [Session tokens](#session-tokens)
+3. [JWT vs Session tokens](#jwt-vs-session-tokens)
+4. [Structure](#structure)
+5. [How JWT Works](#how-jwt-works)
+   - [Header](#header)
+   - [Payload](#payload)
+     - [Claims](#claims)
+       - [Registered claims](#registered-claims)
+       - [Public claims](#public-claims)
+       - [Private claims](#private-claims)
+   - [Signature](#signature)
+6. [JWT Authentication Flow](#jwt-authentication-flow)
+7. [Advantages](#advantages)
+8. [Disadvantages](#disadvantages)
+9. [Best Practices](#best-practices)
+10. [References](#references)
 
 ## Introduction
 
@@ -16,6 +36,8 @@ JWTs are often used for API authentication, providing a single authorization tha
 - Stateless
 - Compact
 - Flexible
+
+![JWT](/static/images/jwt/jwt-banner.png)
 
 ## Session tokens
 
@@ -29,15 +51,19 @@ The session token is stored in the client's browser cookies.
 
 JWT and session tokens are both used to authenticate users, but they have some key differences.
 
-| JWT                                 | Session tokens                      |
-| ----------------------------------- | ----------------------------------- |
-| Can be used across multiple servers | Can only be used on a single server |
-| More secure                         | Less secure                         |
-| More flexible                       | Less flexible                       |
+| Session tokens                                             | JWT                                                                          |
+| ---------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Looks up the session on every request to validate the user | Decrypts the token and validates the signature on every request No DB Lookup |
+| Authentication state (session) is stored on server side    | Stateless - No session stored in DB                                          |
+| Sessions are easy to invalidate                            | Sessions are hard to invalidate                                              |
+| Data is private                                            | Token data can be decoded by anyone if they get access to the token          |
+| Vulnerable to CSRF attacks                                 | Vulnerable to XSS attacks                                                    |
 
 ## Structure
 
 A JWT is composed of three parts separated by dots:
+
+`Xxxxx.yyyy.zzz`
 
 - Header (Algorithm and token type)
 - Payload (claims/data)
@@ -45,4 +71,112 @@ A JWT is composed of three parts separated by dots:
 
 These parts are encoded in a format called Base64, which turns data into a string that’s easy to send over the internet.
 
+![JWT](/static/images/jwt/jwt-structure.png)
+
+<p align="center">Source : https://stytch.com/blog/jwt-claims/ </p>
+
 ## How JWT Works
+
+1. Header
+
+It is the first part of the JWT. It contains the algorithm and token type.
+
+- Algorithm: The algorithm used to encode the token (e.g. HS256, RS256)
+- Token type: The type of token (e.g. JWT)
+
+```json
+{
+  "alg": "HS256",
+  "typ": "JWT"
+}
+```
+
+2. Payload
+
+It is the second part of the JWT. It contains the claims/data.
+
+> [!WARNING]
+> Don't store sensitive data in the payload. The payload is not encrypted, but it is encoded (Base64).
+
+```json
+{
+  "sub": "1234567890",
+  "name": "John Doe",
+  "iat": 1516239022
+}
+```
+
+### Claims
+
+Claims are statements about an entity (e.g., user) and additional metadata.
+There are three types of claims:
+
+1. Registered claims
+
+Registered claims are predefined claims that are not mandatory but recommended.
+
+- `iss` (issuer) : The issuer of the JWT
+- `sub` (subject) : The subject of the JWT (e.g., user ID)
+- `aud` (audience) : Recipient for which the JWT is intended
+- `exp` (expiration time) : Time after which the JWT expires
+- `nbf` (not before time) : Time before which the JWT must not be accepted
+- `iat` (issued at time) : Time at which the JWT was issued
+- `jti` (JWT ID) : Unique identifier for the JWT
+
+2. Public claims
+
+These are custom claims that anyone can see, like a person's name or email. If you make public claims, you should register them or use unique names to avoid conflicts and ensure you control the naming.
+
+3. Private claims
+
+These are custom claims meant for your application only. They include specific details like an employee's ID or department, unlike public claims which are more general.
+
+3. Signature
+
+It is the third part of the JWT. It contains the encoded header and payload.
+The server uses the same algorithm specified in the header to create the signature.
+
+```
+HMACSHA256(
+  base64UrlEncode(header) + "." +
+  base64UrlEncode(payload),
+  secret
+)
+```
+
+## JWT Authentication Flow
+
+1. A user provides their credentials (e.g., username and password) and sends them to the server.
+2. The server validates the credentials. If they are correct, the server generates a JWT containing the user's information (in a claim) and signs it with a secret key.
+3. The server sends the JWT back to the user.
+4. The user stores the JWT (usually in the browser's local storage or as a cookie) and includes it in the Authorization header in subsequent requests to the server.
+5. When the user sends a new request with the JWT, the server decodes the JWT, and verifies its signature. If the token is valid, the server processes the request and returns the appropriate response.
+
+## Advantages
+
+- Cross-domain support
+- Self-contained and extensible
+- Stateless
+
+## Disadvantages
+
+- Token size
+- No Token Invalidation
+- Security risks
+- Limited Token Updates
+
+## Best Practices
+
+- Keep tokens small
+- Don't store sensitive data in the payload
+- Have short expiration times
+- Implement refresh tokens
+- Set the issuer , audience properties in the payload
+- Use asymmetric encryption for signing tokens
+
+## References
+
+1. [JWT](https://jwt.io/)
+2. [JWT Claims](https://stytch.com/blog/jwt-claims/)
+3. [Descope](https://www.descope.com/learn/post/jwt)
+4. [Auth0](https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-token-claims)
