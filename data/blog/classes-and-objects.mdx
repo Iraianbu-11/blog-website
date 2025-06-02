@@ -1,0 +1,160 @@
+---
+title: 'Classes and Objects'
+date: '2025-05-21'
+tags: ['oops', 'system-design', 'low-level-design']
+draft: false
+summary: Classes and Objects in OOPs.
+---
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Class](#class)
+- [Object](#object)
+- [Access Modifiers](#access-modifiers)
+- [References](#references)
+
+## Introduction
+
+    OOPS stands for Object Oriented Programming System. It is a programming paradigm that uses classes and objects to represent real-world entities and their interactions.
+
+Classes and objects form the foundation of OOPs.
+
+## Class
+
+    A class is blueprint or template for creating objects. It defines a set of attributes(fields) and behaviors(methods) of an object.
+
+To define a class, we use the `class` keyword.
+
+### Examples
+
+#### Java
+
+```java
+public class Car{
+    // Attributes
+    private String brand;
+    private String model;
+    private int year;
+
+    // Constructor
+    public Car(String brand, String model, int year){
+        this.brand = brand;
+        this.model = model;
+        this.year = year;
+    }
+
+    // Methods
+    public void displayInfo(){
+        System.out.println("Brand: " + brand + ", Model: " + model +
+                           ", Year: " + year);
+    }
+}
+```
+
+#### Typescript
+
+```typescript
+public class Car{
+    // Attributes
+    private brand: string;
+    private model: string;
+    private year: number;
+
+    // Constructor
+    constructor(brand: string, model: string, year: number){
+        this.brand = brand;
+        this.model = model;
+        this.year = year;
+    }
+
+    // Methods
+    displayInfo = () => {
+        console.log(`Brand: ${this.brand}, Model: ${this.model},
+                     Year: ${this.year}`);
+    }
+
+}
+```
+
+- Attributes : The class `Car` has three attributes that describes its state: `brand`, `model`, and `year`.
+- Constructor : The constructor is a special method that initializes the object. It is called when an object is created using the `new` keyword.
+- Methods : The class `Car` has one method that displays the car's information.
+
+## Object
+
+An object is an instance of a class. When you create an object, you are bringing the blueprint of the class into reality. It consists of state and behavior defined by the class, with each object holding its own copy of the data.
+
+To create an object, we use the `new` keyword followed by class constructor.
+
+### Examples
+
+#### Java
+
+```java
+public class Main{
+    public static void main(String... args){
+        Car toyota = new Car("Toyota", "Corolla", 2020);
+        Car ford = new Car("Ford", "Mustang", 2021);
+        toyota.displayInfo();
+        ford.displayInfo();
+    }
+}
+```
+
+#### Typescript
+
+```typescript
+const toyota = new Car('Toyota', 'Corolla', 2020)
+const ford = new Car('Ford', 'Mustang', 2021)
+toyota.displayInfo()
+ford.displayInfo()
+```
+
+- Instantiation : The `new` keyword is used to create an object, which allocates memory to the object.
+- Initialization : The constructor `Car` is used to initialize the object.
+- Reference : The `toyota` and `ford` are references to the objects.
+
+## Access Modifiers
+
+Access modifiers are used to restrict the access of the class members.
+
+### Java
+
+| Modifier    | Class | Package | Subclass | World |
+| ----------- | ----- | ------- | -------- | ----- |
+| `public`    | Yes   | Yes     | Yes      | Yes   |
+| `private`   | Yes   | No      | No       | No    |
+| `default`   | Yes   | Yes     | No       | No    |
+| `protected` | Yes   | Yes     | Yes      | No    |
+
+```java
+public class Car{
+    public String brand;
+    private String model;
+    public int price;
+    protected int year;
+}
+```
+
+### Typescript
+
+| Modifier    | Class | Subclass | Instance |
+| ----------- | ----- | -------- | -------- |
+| `public`    | Yes   | Yes      | Yes      |
+| `private`   | Yes   | No       | No       |
+| `protected` | Yes   | Yes      | No       |
+
+```typescript
+public class Car{
+    public brand: string;
+    private model: string;
+    price: number;
+    protected year: number;
+}
+```
+
+## References
+
+- [Algomaster](https://github.com/ashishps1/awesome-low-level-design/tree/main/oop/java)
+- [Low Level Design](https://algomaster.io/learn/lld)
