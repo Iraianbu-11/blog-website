@@ -1,0 +1,99 @@
+---
+title: 'Encapsulation'
+date: '2025-06-03'
+tags: ['oops', 'system-design', 'low-level-design']
+draft: false
+summary: Encapsulation in OOPs with examples in Java and Typescript.
+---
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Key Benefits](#key-benefits)
+
+## Introduction
+
+**Encapsulation** is one of the four fundamental principles of object-oriented programming (OOP). It is the practice of **bundling data (attributes) and methods (functions)** that operate on the data into a single unit, called a class while restricting direct
+access to the internal details of the class. It means wrapping the data (attributes) and methods (functions) together into a single unit.
+
+Encapsulation can be achieved by:
+
+- Access modifiers (`public`, `private`, `protected`)
+- Getters and setters
+- Data Hiding
+
+Encapsulation helps in **data protection** , **modularity** and **maintainability** of the code.
+
+## Key Benefits
+
+- Data Hiding : Prevent direct access to sensitive data.
+- Increased Security : Controls how the data is accessed or modified.
+- Improved Code Maintainability : Allows changes without affecting other parts of the code.
+- Better Modularity : Allows the class to be used independently of other classes.
+
+## Using Access Modifiers
+
+### Java
+
+```java
+class BankAccount {
+    private double balance;
+    private String accountNumber;
+
+    // Constructor
+    public BankAccount(double balance, String accountNumber) {
+        this.balance = balance;
+        this.accountNumber = accountNumber;
+    }
+
+    // Getter method
+    public double getBalance() {
+        return balance;
+    }
+
+    // Setter method
+    public void deposit(double amount) {
+        balance += amount;
+        System.out.println("Deposited " + amount + " to account " + accountNumber);
+    }
+
+    public static void main(String... args) {
+        BankAccount account = new BankAccount(1000, "1234567890");
+        account.deposit(500);
+        System.out.println("Balance: " + account.getBalance());
+    }
+}
+```
+
+### Typescript
+
+```typescript
+class BankAccount {
+  private balance: number
+  private accountNumber: string
+
+  constructor(balance: number, accountNumber: string) {
+    this.balance = balance
+    this.accountNumber = accountNumber
+  }
+
+  // Getter method
+  public getBalance(): number {
+    return this.balance
+  }
+
+  // Setter method
+  public deposit(amount: number): void {
+    this.balance += amount
+    console.log(`Deposited ${amount} to account ${this.accountNumber}`)
+  }
+}
+
+const account = new BankAccount(1000, '1234567890')
+account.deposit(500)
+console.log('Balance: ' + account.getBalance())
+```
+
+## Using Getters and Setters
+
+## Data Hiding
