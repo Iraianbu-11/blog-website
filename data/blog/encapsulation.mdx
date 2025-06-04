@@ -1,7 +1,7 @@
 ---
 title: 'Encapsulation'
 date: '2025-06-03'
-tags: ['oops', 'system-design', 'low-level-design']
+tags: ['oops', 'low-level-design']
 draft: false
 summary: Encapsulation in OOPs with examples in Java and Typescript.
 ---
@@ -10,6 +10,10 @@ summary: Encapsulation in OOPs with examples in Java and Typescript.
 
 - [Introduction](#introduction)
 - [Key Benefits](#key-benefits)
+- [Using Access Modifiers](#using-access-modifiers)
+- [Using Getters and Setters](#using-getters-and-setters)
+- [Data Hiding](#data-hiding)
+- [Real world examples](#real-world-examples)
 
 ## Introduction
 
@@ -32,6 +36,22 @@ Encapsulation helps in **data protection** , **modularity** and **maintainabilit
 - Better Modularity : Allows the class to be used independently of other classes.
 
 ## Using Access Modifiers
+
+We can use access modifiers to control the visibility of the data and methods.
+
+## Using Getters and Setters
+
+Encapsulation ensure that the data cannot be directly accessed but must be
+retrieved or modified through methods.
+
+## Data Hiding
+
+Encapulsation helps in hiding the implementation details while exposing only necessary methods.
+
+### Reason
+
+1. Prevents direct modification
+2. Ensures data integrity.
 
 ### Java
 
@@ -94,6 +114,13 @@ account.deposit(500)
 console.log('Balance: ' + account.getBalance())
 ```
 
-## Using Getters and Setters
+## Real world examples
 
-## Data Hiding
+1. Banking Applications - Protecting sensitive financial data.
+2. Healthcare Applications - Protecting patient records.
+3. E-commerce Platforms - Hiding payment processing details
+
+## References
+
+- [Algomaster](https://github.com/ashishps1/awesome-low-level-design/tree/main/oop/java/encapsulation)
+- [GeeksforGeeks] https://www.geeksforgeeks.org/encapsulation-in-java/
