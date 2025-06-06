@@ -50,29 +50,11 @@ public class Car{
 }
 ```
 
-#### Typescript
+#### Output
 
-```typescript
-public class Car{
-    // Attributes
-    private brand: string;
-    private model: string;
-    private year: number;
-
-    // Constructor
-    constructor(brand: string, model: string, year: number){
-        this.brand = brand;
-        this.model = model;
-        this.year = year;
-    }
-
-    // Methods
-    displayInfo = () => {
-        console.log(`Brand: ${this.brand}, Model: ${this.model},
-                     Year: ${this.year}`);
-    }
-
-}
+```
+Brand: Toyota, Model: Corolla, Year: 2020
+Brand: Ford, Model: Mustang, Year: 2021
 ```
 
 - Attributes : The class `Car` has three attributes that describes its state: `brand`, `model`, and `year`.
@@ -100,13 +82,11 @@ public class Main{
 }
 ```
 
-#### Typescript
+#### Output
 
-```typescript
-const toyota = new Car('Toyota', 'Corolla', 2020)
-const ford = new Car('Ford', 'Mustang', 2021)
-toyota.displayInfo()
-ford.displayInfo()
+```
+Brand: Toyota, Model: Corolla, Year: 2020
+Brand: Ford, Model: Mustang, Year: 2021
 ```
 
 - Instantiation : The `new` keyword is used to create an object, which allocates memory to the object.
@@ -135,24 +115,7 @@ public class Car{
 }
 ```
 
-### Typescript
-
-| Modifier    | Class | Subclass | Instance |
-| ----------- | ----- | -------- | -------- |
-| `public`    | Yes   | Yes      | Yes      |
-| `private`   | Yes   | No       | No       |
-| `protected` | Yes   | Yes      | No       |
-
-```typescript
-public class Car{
-    public brand: string;
-    private model: string;
-    price: number;
-    protected year: number;
-}
-```
-
 ## References
 
 - [Algomaster](https://github.com/ashishps1/awesome-low-level-design/tree/main/oop/java/classesandobjects)
-- [GeeksforGeeks] https://www.geeksforgeeks.org/classes-objects-java/
+- [GeeksforGeeks](https://www.geeksforgeeks.org/classes-objects-java/)

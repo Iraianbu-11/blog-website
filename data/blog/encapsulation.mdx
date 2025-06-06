@@ -3,7 +3,7 @@ title: 'Encapsulation'
 date: '2025-06-03'
 tags: ['oops', 'low-level-design']
 draft: false
-summary: Encapsulation in OOPs with examples in Java and Typescript.
+summary: Encapsulation in OOPs with examples in Java.
 ---
 
 ## Table of Contents
@@ -85,33 +85,11 @@ class BankAccount {
 }
 ```
 
-### Typescript
+#### Output
 
-```typescript
-class BankAccount {
-  private balance: number
-  private accountNumber: string
-
-  constructor(balance: number, accountNumber: string) {
-    this.balance = balance
-    this.accountNumber = accountNumber
-  }
-
-  // Getter method
-  public getBalance(): number {
-    return this.balance
-  }
-
-  // Setter method
-  public deposit(amount: number): void {
-    this.balance += amount
-    console.log(`Deposited ${amount} to account ${this.accountNumber}`)
-  }
-}
-
-const account = new BankAccount(1000, '1234567890')
-account.deposit(500)
-console.log('Balance: ' + account.getBalance())
+```
+Deposited 500.0 to account 1234567890
+Balance: 1500.0
 ```
 
 ## Real world examples
@@ -123,4 +101,4 @@ console.log('Balance: ' + account.getBalance())
 ## References
 
 - [Algomaster](https://github.com/ashishps1/awesome-low-level-design/tree/main/oop/java/encapsulation)
-- [GeeksforGeeks] https://www.geeksforgeeks.org/encapsulation-in-java/
+- [GeeksforGeeks](https://www.geeksforgeeks.org/encapsulation-in-java/)
