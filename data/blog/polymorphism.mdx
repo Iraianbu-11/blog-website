@@ -36,11 +36,142 @@ scalability and code resue**.
 
 ## Compile-Time Polymorphism
 
+**Compile-time polymorphism** is also known as **static polymorphism** and also know as **method overloading**.
+It occurs when multiple methods in the same class share the same name but have different method signatures (parameters). The method to be called is determined at **compile time**.
+
+### Java
+
+```java
+class ConsoleOperation {
+    public void print(int number) {
+        System.out.println(number);
+    }
+
+    public void print(String text) {
+        System.out.println(text);
+    }
+
+    public void print(int number, String text) {
+        System.out.println(number + " " + text);
+    }
+}
+
+public class Main {
+    public static void main(String... args) {
+        ConsoleOperation consoleOperation = new ConsoleOperation();
+        consoleOperation.print(10);
+        consoleOperation.print("Hello");
+        consoleOperation.print(10, "Hello");
+    }
+```
+
+#### Output
+
+```
+10
+Hello
+10 Hello
+```
+
+> [!IMPORTANT]
+> Java, Typescript does not support operator overloading.
+
 ## Run-Time Polymorphism
 
+**Run-time polymorphism** is also known as **Dynamic Method Dispatch** and also know as **method overriding**.
+It occurs when a method is overridden in a subclass. The method to be called is determined at **run time**.
+
+### Java
+
+```java
+class Sport {
+    public void display() {
+        System.out.println("Sport is played");
+    }
+}
+
+class Football extends Sport {
+    @Override
+    public void display() {
+        System.out.println("Football is played");
+    }
+}
+
+class Cricket extends Sport {
+    @Override
+    public void display() {
+        System.out.println("Cricket is played");
+    }
+}
+
+public class Main {
+    public static void main(String... args) {
+        Sport sport = new Football(); // Upcasting
+        sport.display();
+
+        sport = new Cricket(); // Dynamic method dispatch
+        sport.display();
+    }
+}
+```
+
+#### Output
+
+```
+Football is played
+Cricket is played
+```
+
+> [!NOTE]
+> Upcasting (or widening) is the typecasting from a subclass to a superclass (Child to Parent class). <br/>Downcasting (or narrowing) is the typecasting from a superclass to a subclass (Parent to Child class).
+
 ## Polymorphism with Interfaces
+
+Polymorphism is widely used with interfaces, allowing multiple classes to share a common contract.
+
+### Java
+
+```java
+interface Payment{
+    void pay();
+}
+
+class CreditCardPayment implements Payment{
+    @Override
+    public void pay(double amount) {
+        System.out.println("Payment done using credit card: " + amount);
+    }
+}
+
+class DebitCardPayment implements Payment{
+    @Override
+    public void pay(double amount) {
+        System.out.println("Payment done using debit card: " + amount);
+    }
+}
+
+public class Main {
+    public static void main(String... args) {
+        Payment payment = new CreditCardPayment();
+        payment.pay(100.00);
+
+        payment = new DebitCardPayment();
+        payment.pay(200.0);
+    }
+}
+
+
+```
+
+#### Output
+
+```
+Payment done using credit card: 100.0
+Payment done using debit card: 200.0
+```
 
 ## References
 
 - [GeeksforGeeks](https://www.geeksforgeeks.org/polymorphism-in-java/)
 - [Algomaster](https://github.com/ashishps1/awesome-low-level-design/tree/main/oop/java/polymorphism)
+- [Scaler](https://www.scaler.com/topics/upcasting-and-downcasting-in-java/)
