@@ -1,0 +1,127 @@
+---
+title: 'Abstraction'
+date: '2025-06-06'
+tags: ['oops', 'low-level-design']
+draft: false
+summary: Abstraction in OOPs with examples in Java.
+---
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Key features](#key-features)
+- [Key differences](#key-differences)
+- [Abstraction using abstract classes](#abstraction-using-abstract-classes)
+- [Abstraction using interfaces](#abstraction-using-interfaces)
+- [References](#references)
+
+## Introduction
+
+**Abstraction** is a core concept in Object-Oriented Programming (OOP) is the process of hiding the implementation details and showing only the essential details or features to the user.
+
+Abstraction is achieved by using **abstract classes** and **interfaces**.
+
+## Key features
+
+- Hides the complex and shows only essential features.
+- Makes code easier to understand and maintain.
+- Protects internal details from external interference.
+
+## Key differences
+
+| Feature              | Abstract Classes                                             | Interfaces                                            |
+| -------------------- | ------------------------------------------------------------ | ----------------------------------------------------- |
+| Methods              | Abstract classes can have abstract and non-abstract methods. | Interfaces can only have abstract methods.            |
+| Constructor          | Abstract classes can have constructors.                      | Interfaces cannot have constructors.                  |
+| Fields               | Abstract classes can have instance variables.                | Interfaces cannot have instance variables.            |
+| Multiple Inheritance | Abstract classes can have instance variables.                | Interfaces cannot have public static final variables. |
+| Access Modifiers     | Can have difference access modifiers                         | Interfaces can only have public methods.              |
+
+## Abstraction using abstract classes
+
+Abstract classes are classes that are declared with the `abstract` keyword.
+It provides partial abstraction.
+
+```java
+abstract class Vehicle {
+    String name;
+    Vehicle(String name) {
+        this.name = name;
+    }
+    abstract void start();
+    void display() {
+        System.out.println("Vehicle: " + name);
+    }
+}
+
+class Car extends Vehicle {
+    Car(String name) {
+        super(name);
+    }
+    @Override
+    void start() {
+        System.out.println("Car started");
+    }
+}
+
+public class Main {
+    public static void main(String... args) {
+        Vehicle car = new Car("Koenigsegg Agera");
+        car.start();
+        car.display();
+    }
+}
+```
+
+#### Output
+
+```
+Car started
+Vehicle: Koenigsegg Agera
+```
+
+## Abstraction using interfaces
+
+Interfaces are abstract types that define a set of methods that a class must implement.
+It provides full abstraction.
+
+```java
+interface Vehicle {
+    void start();
+    void display();
+}
+
+class Car implements Vehicle {
+    String name;
+    Car(String name) {
+        this.name = name;
+    }
+    @Override
+    void start() {
+        System.out.println("Car started");
+    }
+    @Override
+    void display() {
+        System.out.println("Car: " + name);
+    }
+}
+
+public class Main {
+    public static void main(String... args) {
+        Vehicle car = new Car("Koenigsegg Agera");
+        car.start();
+        car.display();
+    }
+}
+```
+
+#### Output
+
+```
+Car started
+Car: Koenigsegg Agera
+```
+
+## References
+
+- [GeeksforGeeks](https://www.geeksforgeeks.org/abstraction-in-java-2/)

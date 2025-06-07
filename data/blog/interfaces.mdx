@@ -1,0 +1,98 @@
+---
+title: 'Interfaces'
+date: '2025-06-06'
+tags: ['oops', 'low-level-design']
+draft: false
+summary: Interfaces in OOPs with examples in Java.
+---
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Real world examples](#real-world-examples)
+- [References](#references)
+
+## Introduction
+
+**Interface** is a crucial concept that defines a contract for classes to follow.
+It is a collection of abstract methods that a class must implement.
+It is used to achieve **multiple inheritance** in Java.
+Java introduces default and static methods in interfaces.
+
+```java
+interface Flyable {
+    void fly();
+}
+
+interface Drivable {
+    void drive();
+}
+
+class FlyingCar implements Flyable, Drivable {
+    @Override
+    void fly() {
+        System.out.println("Flying car is flying");
+    }
+    @Override
+    void drive() {
+        System.out.println("Flying car is driving");
+    }
+}
+
+public class Main {
+    public static void main(String... args) {
+        FlyingCar car = new FlyingCar();
+        car.fly();
+        car.drive();
+    }
+}
+```
+
+#### Output
+
+```
+Flying car is flying
+Flying car is driving
+```
+
+## Real world Examples
+
+```java
+interface Payment {
+    void pay(double amount);
+}
+
+class CreditCardPayment implements Payment {
+    @Override
+    public void pay(double amount) {
+        System.out.println("Paid " + amount + " using Credit Card");
+    }
+}
+
+class UPI implements Payment {
+    @Override
+    public void pay(double amount) {
+        System.out.println("Paid " + amount + " using UPI");
+    }
+}
+
+public class Main {
+    public static void main(String... args) {
+        Payment payment = new CreditCardPayment();
+        payment.pay(100.0);
+        payment = new UPI();
+        payment.pay(200.0);
+    }
+}
+```
+
+#### Output
+
+```
+Paid 100.0 using Credit Card
+Paid 200.0 using UPI
+```
+
+## References
+
+- [GeeksforGeeks](https://www.geeksforgeeks.org/interfaces-in-java/)
