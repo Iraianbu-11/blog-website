@@ -1,0 +1,167 @@
+---
+title: 'Inheritance'
+date: '2025-06-05'
+tags: ['oops', 'low-level-design']
+draft: false
+summary: Inheritance in OOPs with examples in Java.
+---
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Benefits](#benefits)
+- [Types of Inheritance](#types-of-inheritance)
+  - [Single Inheritance](#single-inheritance)
+  - [Multi-level Inheritance](#multi-level-inheritance)
+  - [Hierarchical Inheritance](#hierarchical-inheritance)
+- [Disadvantages](#disadvantages)
+- [References](#references)
+
+## Introduction
+
+**Inheritance** is a core concept in Object-Oriented Programming (OOP) that allows classes to inherit properties and methods from their parent classes.
+This promotes code reusability and helps create a hierarchical relationship between classes.
+
+```java
+// Syntax
+class ChildClass extends ParentClass {
+    // Child class implementation
+}
+```
+
+```java
+class Employee {
+    private String name;
+    private int age;
+    private String department;
+
+    public Employee(String name, int age, String department){
+        this.name = name;
+        this.age = age;
+        this.department = department;
+    }
+
+    public String getDetails(){
+        return "Name: " + name + ", Age: " + age + ", Department: " + department;
+    }
+}
+
+class Manager extends Employee {
+    private String team;
+
+    @Override
+    public String getDetails(){
+        return super.getDetails() + ", Team: " + team;
+    }
+}
+
+public class Main {
+    public static void main(String... args) {
+        Manager manager = new Manager("Iraianbu A", 20, "IT", "CARES");
+        System.out.println(manager.getDetails());
+    }
+}
+```
+
+#### Output
+
+```
+Name: Iraianbu A, Age: 20, Department: IT, Team: CARES
+```
+
+## Benefits
+
+- Code Reusability: Avoids code duplication by reusing fields and methods of the parent class.
+- Improves Maintainability: Reduces redundancy and easier to manage
+- Enhances Extensibility: New functionality can be added easily without modifying existing code.
+
+## Types of Inheritance
+
+### Single Inheritance
+
+A subclass inherits from a single parent class.
+
+```java
+class Parent {
+    void show() {
+        System.out.println("Parent class");
+    }
+}
+
+class Child extends Parent {
+    @Override
+    void display() {
+        System.out.println("Child class");
+    }
+}
+```
+
+### Multi-level Inheritance
+
+A subclass inherits from another subclass, forming a chain.
+
+```java
+
+class GrandParent {
+    void show() {
+        System.out.println("GrandParent class");
+    }
+}
+
+class Parent extends GrandParent {
+    @Override
+    void show() {
+        System.out.println("Parent class");
+    }
+}
+
+class Child extends Parent {
+    @Override
+    void display() {
+        System.out.println("Child class");
+    }
+}
+
+```
+
+### Hierarchical Inheritance
+
+A single parent class has multiple subclasses.
+
+```java
+class Parent{
+    void show() {
+        System.out.println("Parent class");
+    }
+}
+
+class Son extends Parent {
+    @Override
+    void display() {
+        System.out.println("Son class");
+    }
+}
+
+class Daughter extends Parent {
+    @Override
+    void display() {
+        System.out.println("Daughter class");
+    }
+}
+
+```
+
+> [!NOTE]
+> Java does not support multiple inheritance. It can be achieved through interfaces.
+
+## Disadvantages
+
+- **Tight Coupling**: Changes in the parent class can affect all subclasses.
+- **Complexity**: Inheritance can make the code more complex and harder to understand.
+- **Overriding Issues**: If a method is not overridden in a subclass, it will use the parent class's method.
+- **Diamond Problem**: When a class inherits from two classes that have the same method, it can cause ambiguity.
+
+## References
+
+- [GeeksforGeeks](https://www.geeksforgeeks.org/inheritance-in-java/)
+- [Algomaster](https://github.com/ashishps1/awesome-low-level-design/tree/main/oop/java/inheritance)
