@@ -1,0 +1,288 @@
+---
+title: 'Class Relationships'
+date: '2025-06-07'
+tags: ['oops', 'low-level-design']
+draft: false
+summary: Class relationships (Inheritance, Composition, Aggregation, Association , Dependency) with examples in Java.
+---
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Types of Class Relationships](#types-of-class-relationships)
+  - [Inheritance](#inheritance)
+  - [Association](#association)
+  - [Aggregation](#aggregation)
+  - [Composition](#composition)
+  - [Dependency](#dependency)
+- [Association vs Aggregation vs Composition](#association-vs-aggregation-vs-composition)
+- [References](#references)
+
+## Introduction
+
+In this article, we'll explore all kinds of relationships in object-oriented design using **Java** with real-life examples
+
+## Types of Class Relationships
+
+### Inheritance
+
+Please refer to [Inheritance](./inheritance) for more details.
+
+### Association
+
+Association is a general relationship where one class knows about or uses another class.
+They can exist independently of each other.
+
+> [!NOTE]
+> Association represents **USES-A** relationship.
+
+#### Types of Association
+
+1. **Unidirectional Association**
+   One class knows about another class but the other class doesn't know about the first class.
+   (Example : A `Person` knows about a `Car` but a `Car` doesn't know about a `Person`.)
+
+2. **Bidirectional Association**
+   The classes are aware of each other and can interact with each other.
+   (Example : A `Library` has many `Books` and a `Book` belongs to a `Library`.)
+
+3. **One-to-One Association**
+   Each object of class A is associated with one object of class B.
+   (Example : A `Person` has a single `Passport`.)
+
+4. **One-to-Many Association**
+   Each object of class A is associated with many objects of class B.
+   (Example : A `Teacher` has many `Students`.)
+
+5. **Many-to-One Association**
+   Many objects of class A is associated with one object of class B.
+   (Example : Multiple `Students` belongs to one `Department`.)
+
+6. **Many-to-Many Association**
+   Many objects of class A is associated with many objects of class B.
+   (Example : Multiple `Students` can have multiple `Teachers`.)
+
+```java
+class Car{
+    private String model;
+    Car(String model ){
+        this.model = model;
+    }
+
+    void drive(){
+        System.out.println("Driving a " + model + " car");
+    }
+}
+
+class Person{
+    private String name;
+    private Car car;
+    Person(String name , Car car){
+        this.name = name;
+        this.car = car;
+    }
+    void drive(){
+        System.out.println(name + " is driving a " + car.getModel() + " car");
+    }
+}
+
+public class Main{
+    public static void main(String[] args){
+        Car car = new Car("Koenigsegg");
+        Person person = new Person("Iraianbuu", car);
+        person.drive();
+    }
+}
+```
+
+#### Output
+
+```
+Iraianbuu is driving a Koenigsegg car
+```
+
+- `Person` has a reference to `Car`.
+- Both `Car` and `Person` can exist independently.
+
+### Aggregation
+
+Aggregation is a weak form of association in OOP where an object of one class contains a reference to an object of another class.
+However, the contained object can exist independently of the container.
+This means that even if the container object is destroyed, the contained object can still be used elsewhere in the application.
+
+> [!NOTE]
+> Aggregation represents **HAS-A** relationship.
+
+#### Real-life Examples
+
+1. `Zoo` - `Animals` (Zoo has many animals but animals can be transferred to other zoos.)
+2. `Library` - `Books` (Library has many books but books can be transferred to other libraries.)
+3. `Hospital` - `Doctors` (Hospital has many doctors but doctors can work in other hospitals.)
+
+```java
+class Professor {
+    private String name;
+    private String subject;
+
+    public Professor(String name, String subject) {
+        this.name = name;
+        this.subject = subject;
+    }
+
+    public void teach() {
+        System.out.println(name + " is teaching " + subject);
+    }
+}
+
+class University {
+    private String universityName;
+    private List<Professor> professors;
+
+    public University(String universityName) {
+        this.universityName = universityName;
+        this.professors = new ArrayList<>();
+    }
+
+    public void addProfessor(Professor professor) {
+        professors.add(professor);
+    }
+
+    public void showProfessors() {
+        System.out.println("Professors at " + universityName + ":");
+        for (Professor professor : professors) {
+            System.out.println(" - " + professor.name);
+        }
+    }
+}
+
+public class Main{
+    public static void main(String... args) {
+        Professor virat = new Professor("Dr. Virat Kohli", "Java");
+        Professor rohit = new Professor("Dr. Rohit Sharma", "Python");
+
+        University university = new University("NIT Trichy");
+        university.addProfessor(virat);
+        university.addProfessor(rohit);
+
+        university.showProfessors();
+
+        // Professors can exist independently
+        virat.teach();
+        rohit.teach();
+    }
+}
+```
+
+#### Output
+
+```
+Professors at NIT Trichy:
+ - Dr. Virat Kohli
+ - Dr. Rohit Sharma
+
+Dr. Virat Kohli is teaching Java
+Dr. Rohit Sharma is teaching Python
+```
+
+### Composition
+
+Composition is a strong form of association in OOP where an object of one class contains a reference to an object of another class.
+If the container object is destroyed, the contained object is also destroyed.
+The contained class is often called a component, and the containing class is referred to as a composite class.
+
+> [!NOTE]
+> Composition represents **HAS-A** / **PART-OF** relationship.
+
+#### Real-life Examples
+
+1. `Car` - `Engine` (A car has an engine but the engine can't exist without a car.)
+2. `House` - `Rooms` (A house has many rooms but rooms can't exist without a house.)
+3. `Human` - `Heart` (A human has a heart but the heart can't exist without a human.)
+
+```java
+class Engine{
+    private String type;
+    Engine(String type){
+        this.type = type;
+    }
+    void start(){
+        System.out.println("Engine started");
+    }
+}
+
+class Car{
+    private Engine engine;
+    Car(Engine engine){
+        this.engine = engine;
+    }
+    void start(){
+        engine.start();
+    }
+}
+
+public class Main{
+    public static void main(String... args){
+        Engine engine = new Engine("V8");
+        Car car = new Car(engine);
+        car.start();
+    }
+}
+```
+
+#### Output
+
+```
+Engine started
+```
+
+### Dependency
+
+Dependency is a relationship where one class uses another class.
+
+```java
+class Printer {
+  void print(String message) {
+    System.out.println("Printing: " + message);
+  }
+}
+
+class Document {
+  String content;
+  Document(String content) {
+    this.content = content;
+  }
+  // Dependency: Document uses Printer to print its content.
+  void printDocument(Printer printer) {
+    printer.print(content);
+  }
+}
+
+public class DependencyDemo {
+  public static void main(String[] args) {
+    Document doc = new Document("Hello, World!");
+    Printer printer = new Printer();
+    doc.printDocument(printer);
+  }
+}
+
+```
+
+#### Output
+
+```
+Printing: Hello, World!
+```
+
+## Association vs Aggregation vs Composition
+
+| Feature          | Association                | Aggregation                             | Composition                                                   |
+| ---------------- | -------------------------- | --------------------------------------- | ------------------------------------------------------------- |
+| Relationship     | Knows-A                    | Has-A                                   | Has-A                                                         |
+| Object Lifecycle | Independent                | Independent                             | Dependent                                                     |
+| Lifetime         | Object exist independently | Container object outlives the container | Contained object is destroyed when the container is destroyed |
+| Example          | `Teacher` and `Student`    | `University` and `Professor`            | `Car` and `Engine`                                            |
+
+## References
+
+- [Association, Aggregation, Composition](https://www.geeksforgeeks.org/association-composition-aggregation-java/)
+- [Composition](https://www.geeksforgeeks.org/composition-in-java/)
