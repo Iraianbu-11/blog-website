@@ -1,0 +1,104 @@
+---
+title: 'Single Responsibility Principle'
+date: '2025-06-09'
+tags: ['oops', 'low-level-design', 'design-principles', 'solid']
+draft: false
+summary: Single Responsibility Principle with examples in Java.
+---
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Single Responsibility Principle](#single-responsibility-principle)
+- [Example in Java](#example-in-java)
+- [The Problem](#the-problem)
+- [Better Design](#better-design)
+- [Benefits](#benefits)
+- [Conclusion](#conclusion)
+- [References](#references)
+
+## Introduction
+
+SOLID is an acronym for the five principles of object-oriented design by Robert C. Martin (Uncle Bob).
+In this article, we will discuss the Single Responsibility Principle (SRP) and how it can be applied to Java and TypeScript.
+
+## Single Responsibility Principle
+
+The **Single Responsibility Principle (SRP)** states that a module (Set of function, classes or packages)
+should be responsible to one, and only one,actor.
+An actor is any individual, group, or other system that interacts with the system in a way and may call for modifications to the module.
+
+> [!NOTE]
+> A class should have one and only one reason to change
+
+## Example in Java
+
+Consider this Java class that violates SRP:
+
+```java
+public class Employee {
+  public Money calculatePay();
+  public void save();
+  public String reportHours();
+}
+```
+
+This class has three methods:
+
+- `calculatePay`: Determines how much an employee should be paid based on their contract, status, and hours worked
+- `save`: Stores the employee data in the enterprise database
+- `reportHours`: Generates a report string for auditors to verify working hours
+
+### The Problem
+
+This class violates SRP because it has multiple responsibilities that would be of interest to different stakeholders:
+
+1. The CFO's team would request changes to the `calculatePay` method
+2. The HR's team would request changes to the `reportHours` method
+3. The Technical team would request changes to the `save` method
+
+If you change the `calculatePay` method and accidentally break the `reportHours` method, you've created a problem for the HR's team when they didn't request any changes.
+
+### Better Design
+
+Following SRP, we should separate these responsibilities:
+
+```java
+public class Employee {
+  // Employee data and core functionality
+}
+
+public class PayCalculator {
+  public Money calculatePay(Employee employee);
+}
+
+public class EmployeeRepository {
+  public void save(Employee employee);
+}
+
+public class HourReporter {
+  public String reportHours(Employee employee);
+}
+```
+
+Now each class has a single responsibility and will change only when requested by its respective stakeholder.
+
+For another example check out this repo : [Single Responsibility Principle](https://github.com/iraianbuuu/solid-principles/tree/main/single-responsibility-principle)
+
+## Benefits
+
+1. **Maintainability**: Changes in one responsibility won't affect other responsibilities
+2. **Testability**: Easier to write focused unit tests
+3. **Readability**: Classes and methods become more focused and easier to understand
+4. **Reusability**: Single-responsibility components are more likely to be reusable
+
+## Conclusion
+
+The Single Responsibility Principle helps us create more maintainable code by separating concerns based on who might request changes.
+As Uncle Bob puts it: **"Gather together the things that change for the same reasons. Separate those things that change for different reasons."**
+
+## References
+
+- [sudoCODE](https://youtu.be/-T0H--a8WnY?si=d2WabV_3YqSF8npW)
+- [Daily Code Buffer](https://www.youtube.com/watch?v=IFe6gdNUDAg)
+- [Object Oriented Design](https://www.oodesign.com/single-responsibility-principle)
