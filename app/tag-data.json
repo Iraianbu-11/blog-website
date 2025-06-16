@@ -1,7 +1,10 @@
 {
-  "oops": 10,
-  "low-level-design": 10,
-  "design-patterns": 2,
+  "oops": 11,
+  "low-level-design": 11,
+  "design-patterns": 3,
+  "creational-design-patterns": 2,
+  "design-principles": 1,
+  "solid": 1,
   "git": 1,
   "version-control": 1,
   "backend": 6,
@@ -9,8 +12,5 @@
   "api": 6,
   "rest": 5,
   "system-design": 5,
-  "http": 3,
-  "design-principles": 1,
-  "solid": 1,
-  "creational-design-patterns": 1
+  "http": 3
 }
