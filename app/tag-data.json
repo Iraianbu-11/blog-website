@@ -1,4 +1,6 @@
 {
+  "angular": 1,
+  "signals": 1,
   "oops": 11,
   "low-level-design": 11,
   "design-patterns": 3,
