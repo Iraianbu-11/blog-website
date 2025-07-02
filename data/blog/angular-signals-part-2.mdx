@@ -1,0 +1,253 @@
+---
+title: 'Angular Signals - Part 2'
+date: '2025-07-02'
+tags: ['angular', 'signals']
+draft: false
+summary: Introduction to Angular Signals with RxJS.
+---
+
+## Table of Contents
+
+- [Equality Functions](#equality-functions)
+- [Read without Tracking Dependencies](#read-without-tracking-dependencies)
+- [Effective Cleanups](#effective-cleanups)
+- [toSignal](#tosignal)
+  - [Manually Destroying Observables](#manually-destroying-observables)
+- [Error and Completion](#error-and-completion)
+- [toObservable](#toobservable)
+  - [Monitoring Signals](#monitoring-signals)
+  - [Injection Context](#injection-context)
+- [outputFromObservable](#outputfromobservable)
+- [outputToObservable](#outputtoobservable)
+- [References](#references)
+
+## Introduction
+
+In the previous part, we covered the basics of Angular Signals. Check [Angular Signals Part 1](./angular-signals-part-1.mdx) for more details.
+Here we will cover the advanced topics of Angular Signals with RxJS.
+
+## Equality Functions
+
+Equality functions allow us to customize how changes to signal values are detected. By default, Angular uses referential equality `===` to compare values. This approach only checks if two variables reference the same object. For complex objects, this approach can be inefficient because it doesn't check for value equality.
+Equality functions can be provided to both `Writable` and `Computed` signals. This is useful when dealing with deep equality checks rather than referential equality.
+
+```ts
+@Component({...})
+export class SignalComponent {
+  data = signal(['Angular'], {equal: isEqual}); // Lodash isEqual function
+  constructor() {
+    effect(() => {
+      console.log(this.data());
+    });
+  }
+  ngOnInit(): void {
+    setTimeout(() => {
+      this.data.set(['Angular']);
+    }, 2000);
+  }
+}
+```
+
+## Read without Tracking Dependencies
+
+If we want to execute function which may read signals without tracking dependencies, we can use `untracked`.
+
+```ts
+effect(() => {
+  console.log(`User set to ${currentUser()} and the counter is ${counter()}`)
+})
+```
+
+This will log the message if any one of the signal changes. However, if we want to run only if the `currentUser` changes, we can use `untracked`.
+
+**⚠️ Important:** `untracked` is a function that allows us to read signals without tracking dependencies. We should pass the signal reference, not call it as a function.
+
+```ts
+effect(
+  () => {
+    console.log(`User set to ${currentUser()} and the counter is ${untracked(counter)}`)
+  },
+  { allowSignalWrites: true }
+)
+```
+
+We can also use inside `effect` function.
+
+```ts
+effect(() => {
+  untracked(() => {
+    console.log(`User set to ${currentUser()} and the counter is ${counter()}`)
+  })
+})
+```
+
+## Effective Cleanups
+
+We can pass an `onCleanup` function to the `effect` function. This function will be called when the effect is destroyed.
+
+[Effective Cleanups Example](src/app/components/counter-operation/counter-operation.component.ts)
+
+```ts
+effect((onCleanup) => {
+  const user = currentUser()
+  const timer = setInterval(() => {
+    console.log(`1 second ago, the user became ${user}`)
+  }, 1000)
+  onCleanup(() => {
+    clearInterval(timer)
+  })
+})
+```
+
+## ToSignal
+
+The `toSignal` function converts an RxJS Observable to a signal.
+
+```ts
+@Component({...})
+export class SignalComponent {
+ counterObservable = interval(1000);
+
+ counter = toSignal(this.counterObservable, {
+  initialValue : 0
+ })
+}
+```
+
+### Manually Destroying Observables
+
+```ts
+@Component({...})
+export class SignalComponent {
+counterObservable = interval(1000);
+  private subscription!: Subscription;
+
+  ngOnInit() {
+    this.subscription = this.counterObservable.subscribe();
+  }
+
+  counterSignal = toSignal(this.counterObservable, {
+    initialValue: 0,
+    manualCleanup: true,
+
+  });
+
+  ngOnDestory() {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+```
+
+Options :
+
+- `initialValue` : The initial value of the signal.
+- `manualCleanup` : This allows to clean up (unsubscribe) from the observable.
+- `requireSync` : It enforces the Observables emits synchronously on subscription.
+
+## Error and Completion
+
+If an Observable used in `toSignal` produces an error, that error is thrown when the signal is read.
+
+## toObservable
+
+`toObservable` is a utility in Angular that converts a signal to an Observable.
+This allows us to take the signal ans use it with RxJS operators like `map`, `filter`, `switchMap`, etc.
+
+### Monitoring Signals
+
+When a signal's value changes, the toObservable utility tracks the changes
+using a `effect` and emits the update value through the Observable.
+
+### Injection Context
+
+The `toObservable` relies on an injection context. If there's no automatic injection
+context, you can provide an `Injector` manually.
+
+On Subscription, `toObservable` might emit the last known value of the signal immediately (if available) via `ReplaySubject`.
+
+```ts
+@Component({...})
+export class SignalComponent {
+  query = signal('');
+  query$ = toObservable(this.query);
+
+  ngOnInit() {
+    this.query.set('A');
+    this.query.set('B');
+    this.query.set('C');
+  }
+
+  ngAfterViewInit() {
+    this.query$.subscribe(console.log);
+  }
+}
+```
+
+## outputFromObservable
+
+The `outputFromObservable` lets you create a component or directive output that emits based on an RxJS observable.
+
+```ts
+@Component({...})
+export class RxjsInteropComponent {
+  // Observable
+  counter$ = new Observable<number>((subscriber) => {
+    let count = 0;
+    const interval = setInterval(() => {
+      count++;
+      this.counter.emit(count);
+      subscriber.next(count);
+    }, 1000);
+    return () => clearInterval(interval);
+  });
+  // EventEmitter
+  @Output() counter = new EventEmitter<number>();
+
+  // outputFromObservable
+  outputFromObservable = outputFromObservable(this.counter$);
+}
+```
+
+```html
+<!-- Using EventEmitter -->
+<app-rxjs-interop (counter)="onCounterChange($event)"></app-rxjs-interop>
+
+<!-- Using outputFromObservable -->
+<app-rxjs-interop (outputFromObservable)="onCounterChange($event)"></app-rxjs-interop>
+```
+
+## outputToObservable
+
+The `outputToObservable` function lets you create an RxJS observable from a component output.
+
+```ts
+@Component({...})
+export class AppComponent {
+  showCounterOperation = signal(false);
+  counterO$!: Observable<number>;
+  @ViewChild('rxjsInteropComponent') rxjsInteropComponent!: RxjsInteropComponent;
+
+
+  ngAfterViewInit() {
+    if (this.rxjsInteropComponent) {
+      this.counterO$ = outputToObservable(this.rxjsInteropComponent.counter);
+    }
+  }
+
+  onCounterChange(counter: number) {
+    console.log('counter', counter);
+  }
+
+  onToggleComponent() {
+    this.showCounterOperation.set(!this.showCounterOperation());
+  }
+```
+
+```html
+<app-rxjs-interop #rxjsInteropComponent></app-rxjs-interop>
+```
+
+## References
+
+[Angular Signals](https://angular.dev/guide/signals)
