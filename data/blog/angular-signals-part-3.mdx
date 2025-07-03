@@ -1,0 +1,217 @@
+---
+title: 'Angular Signals - Part 3'
+date: '2025-07-03'
+tags: ['angular', 'signals']
+draft: false
+summary: Introduction to Angular Inputs, Queries and Linked Signals.
+---
+
+## Table of Contents
+
+- [Introduction](#introduction)
+- [Signal Inputs](#signal-inputs)
+- [Signal Queries](#signal-queries)
+  - [viewChild](#viewchild)
+  - [viewChildren](#viewchildren)
+  - [contentChild](#contentchild)
+  - [contentChildren](#contentchildren)
+  - [Options](#options)
+  - [Required Queries](#required-queries)
+  - [Query Availability Timing](#query-availability-timing)
+  - [Query Declarations and Usage](#query-declarations-and-usage)
+- [Linked Signals](#linked-signals)
+- [References](#references)
+
+## Introduction
+
+In the previous part, we covered the basics of Angular Signals. Check [Angular Signals Part 1](./angular-signals-part-1.mdx) and [Angular Signals Part 2](./angular-signals-part-2.mdx) for more details.
+Here we will cover the advanced topics of Angular Signals with Inputs, Queries and Linked Signals.
+
+## Signal Inputs
+
+Signal inputs that allow component values to be bound from parent components. These values are exposed using a signal, which can change throughout the lifecycle of your component.
+
+```ts
+@Component({...})
+export class AppComponent {
+  firstName = input.required<string>(); // Required input
+  lastName = input<string>(); // Optional input
+  age = input<number>(0); // Default value
+  currentAge = input<number>(0, { alias: 'studentAge' }); // Default value with alias
+}
+```
+
+## Signal Queries
+
+The signal-based queries offer a way to retriev and interact with elements, components or directives in
+a component's template (view) or projected content.
+
+Angular provides two main types of queries:
+
+1. View Queries : These retrives results from the component's own template. It let us retrieve elements or components that are part of the component's template.
+
+2. Content Queries : These retrieve results from the component's projected content.
+
+### `viewChild`
+
+The `viewChild` function retrieves a single element or component either by string reference or by component/directive type.
+
+```ts
+@Component({...})
+export class AppComponent {
+  // Decorator
+  @ViewChild('rxjsInteropComponent') rxjsInteropComponent!: RxjsInteropComponent;
+
+  // viewChild by component/directive type
+  component1 = viewChild(RxjsInteropComponent); // Signal
+
+  component1 = viewChild(RxjsInteropComponent, {
+    read: ElementRef,
+  }); // ElementRef
+
+  // viewChild by element type
+  divElement = viewChild('rxjsInteropComponent');
+}
+```
+
+### `viewChildren`
+
+The `viewChildren` function retrieves multiple elements or components either by string reference or by component/directive type.
+
+```ts
+@Component({...})
+export class AppComponent {
+  elements = viewChildren(RxjsInteropComponent);
+}
+```
+
+### `contentChild`
+
+The `contentChild` function retrieves a single element or component from the component's projected content.
+
+```ts
+@Component({...})
+export class AppComponent {
+  headerElement = contentChild(HeaderComponent);
+}
+```
+
+```html
+<app-content-elements>
+  <app-header />
+</app-content-elements>
+```
+
+### `contentChildren`
+
+The `contentChildren` function retrieves multiple elements or components from the component's projected content.
+
+```ts
+@Component({...})
+export class AppComponent {
+  elements = contentChildren<ElementRef>('h1Elements');
+}
+```
+
+```html
+<app-content-elements>
+  <div #h1Elements>
+    <h1>This is another heading element</h1>
+    <h1>This is another heading element</h1>
+  </div>
+  <app-header />
+</app-content-elements>
+```
+
+### Options
+
+`descendants` : This option allows you to retrieve elements or components that are descendants of the component.
+
+`read` : This option allows you to specify the type of the element or component.
+
+### Required Queries
+
+If a child query (`viewChild` or `contentChild`) does not find a result, its value is `undefined`.For such cases, you can mark child queries as required to enforce presence of at least one matching result. If no result is found, Angular will throw an runtime error.
+
+```ts
+@Component({...})
+export class AppComponent {
+  headerElement = contentChild.required(HeaderComponent);
+}
+```
+
+### Query Availability Timing
+
+When angular builds a component, there is a period where the signal query has been created but the template has not been fully processed. During this time, the queries will return :
+
+- `undefined` (for single queries)
+- An empty array (for multiple queries)
+
+### Query Declarations and Usage
+
+We can declare signal-based queries in class properties. These functions should not be called in other parts of the component (e.g., `constructor`).
+
+## Linked Signals
+
+`linkedSignal` is a utility that allows us to create a signal that is linked to another signal. It behaves like `computed` signals with a writable side.
+
+`linkedSignal` is like `computed` but with 2 main differences :
+
+1. The derived value of `linkedSignal` can be overridden at any time.
+
+2. The `linkedSignal` provide access to the previous values
+
+### Options
+
+- `source` : The source signal that the linked signal is linked to.
+- `computation` : It is a function that receives the new value of source and a previous object. The previous object contains the previous value of source and the previous value of the computation.
+- `equal` : It is a function that compares the new value of source and the previous value of source.
+
+```ts
+import { Component, linkedSignal, signal } from '@angular/core'
+
+@Component({
+  selector: 'app-linked-signals',
+  imports: [],
+  template: `
+    <ul>
+      @for (reaction of reactions(); track $index) {
+        <li [class.selected]="isSelected(reaction)" (click)="selectedReaction.set(reaction)">
+          {{ reaction }}
+        </li>
+      }
+    </ul>
+    <span>Selected Reaction: {{ selectedReaction() }}</span>
+    <button class="btn btn-primary" (click)="addReaction()">More Reaction</button>
+    <button class="btn btn-primary" (click)="removeReaction()">Less Reaction</button>
+  `,
+  styles: ``,
+})
+export class LinkedSignalsComponent {
+  reactions = signal<string[]>(['🤩', '😒', '🤔'])
+  // selectedReaction = linkedSignal(() => this.reactions()[-1]);
+
+  selectedReaction = linkedSignal<string[], string>({
+    source: () => this.reactions(),
+    computation: (source, previous) => {
+      return source.find((reaction) => reaction === previous?.value) ?? source[0]
+    },
+  })
+
+  addReaction = () => {
+    this.reactions.set(['🤣', '😊', '😎', '😯', '🫠'])
+  }
+
+  removeReaction = () => {
+    this.reactions.set(['🤩', '😒', '🤔'])
+  }
+
+  isSelected = (reaction: string) => {
+    return this.selectedReaction() === reaction
+  }
+}
+```
+
+## References
+
+- [Angular Signals](https://angular.dev/guide/signals)
